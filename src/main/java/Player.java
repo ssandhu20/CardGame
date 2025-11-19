@@ -37,6 +37,14 @@ public class Player {
         hand.add(card);
     }
 
+    public Card removeCard(int index) {
+        return hand.remove(index);
+    }
+
+    public void clearHand() {
+        hand.clear();
+    }
+
     public String toString() {
         return name + " has " + points + " points\n" +
                 name + "'s cards: " + hand;
