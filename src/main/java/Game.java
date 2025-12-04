@@ -111,16 +111,20 @@ public class Game {
         ArrayList<Card> hand = player.getHand();
 
 
-        if (hand.size() <= 1) {
+        if (hand.size() == 0) {
             return true;
         }
 
+        if (checkForThreeOfAKind(hand) && hand.size() <= 4) {
+            return true;
+        }
 
-        if (checkForThreeOfAKind(hand) || checkForFourOfAKind(hand)) {
+        if (checkForFourOfAKind(hand) && hand.size() <= 5) {
             return true;
         }
 
         return false;
+
     }
 // this method allows for a player to make their turn, including drawing and discarding
     public void playerTurn(Player player) {
