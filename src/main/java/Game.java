@@ -13,6 +13,7 @@ public class Game {
     private Scanner scanner;
     private int maxScore;
     private Player currentPlayer;
+    private int turnCount;
 
     public Game(String player1Name, String player2Name, int maxScore) {
         this.player1 = new Player(player1Name);
@@ -198,8 +199,11 @@ public class Game {
 
 
         boolean roundOver = false;
-        while (!roundOver && !deck.isEmpty()) {
+        turnCount = 0;
+        int maxTurns = 20;
+        while (!roundOver && !deck.isEmpty() && turnCount < maxTurns) {
             playerTurn(currentPlayer);
+            turnCount++;
 
             if (checkForWinningHand(currentPlayer)) {
                 System.out.println("\n" + currentPlayer.getName() + " wins this round");
@@ -213,7 +217,9 @@ public class Game {
             }
         }
 
-        if (deck.isEmpty()) {
+        if (turnCount >= maxTurns) {
+            System.out.println("Turn limit reached! Round is a draw");
+        } else if (deck.isEmpty()) {
             System.out.println("Deck ran out of cards. Round is a draw");
         }
     }
