@@ -5,6 +5,12 @@ public class Game {
     private final String[] suits = {"Hearts", "Clubs", "Diamonds", "Spades"};
     private final String[] rank = {"Ace", "2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King"};
     private final int[] value = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13};
+    private int state;
+    private GameView view;
+
+    public static final int STATE_INSTR = 0;
+    public static final int STATE_MAIN = 1;
+    public static final int STATE_END = 2;
 
     public Deck deck;
     private ArrayList<Card> discardPile;
@@ -23,8 +29,9 @@ public class Game {
         this.maxScore = maxScore;
         this.deck = new Deck(rank, suits, value);
         this.currentPlayer = player1;
+        this.state = STATE_INSTR; // Initialize state
     }
-// method to deal cards to each player and start the game
+    // method to deal cards to each player and start the game
     public void dealCards() {
         for (int i = 0; i < 7; i++) {
             player1.addCard(deck.deal());
@@ -32,7 +39,7 @@ public class Game {
         }
         discardPile.add(deck.deal());
     }
-// allows the player to see what card they have in their hand in what order so that they can draw and discard
+    // allows the player to see what card they have in their hand in what order so that they can draw and discard
     public void displayHand(Player player) {
         ArrayList<Card> hand = player.getHand();
         System.out.println(player.getName() + "'s hand:");
@@ -40,7 +47,7 @@ public class Game {
             System.out.println(i + ": " + hand.get(i));
         }
     }
-// a players hand will be calculated based on the value of each card to help determine a winner of each round ---> each game
+    // a players hand will be calculated based on the value of each card to help determine a winner of each round ---> each game
     public int calculateHandPoints(ArrayList<Card> hand) {
         int points = 0;
         for (Card card : hand) {
@@ -48,7 +55,7 @@ public class Game {
         }
         return points;
     }
-// a method to check if a player has 3 cards of the same rank
+    // a method to check if a player has 3 cards of the same rank
     public boolean checkForThreeOfAKind(ArrayList<Card> hand) {
         for (int i = 0; i < hand.size(); i++) {
             int count = 0;
@@ -63,7 +70,7 @@ public class Game {
         }
         return false;
     }
-// a method to check if a player has four cards of the same rank
+    // a method to check if a player has four cards of the same rank
     public boolean checkForFourOfAKind(ArrayList<Card> hand) {
         for (int i = 0; i < hand.size(); i++) {
             int count = 0;
@@ -78,7 +85,7 @@ public class Game {
         }
         return false;
     }
-// this method checks to see if either player has a valid "run" in their hand
+    // this method checks to see if either player has a valid "run" in their hand
     public boolean isValidRun(ArrayList<Card> cards) {
         if (cards.size() < 3) {
             return false;
@@ -107,7 +114,7 @@ public class Game {
         }
         return true;
     }
-// if a player has a winning hand, this method will check and know
+    // if a player has a winning hand, this method will check and know
     public boolean checkForWinningHand(Player player) {
         ArrayList<Card> hand = player.getHand();
 
@@ -127,7 +134,7 @@ public class Game {
         return false;
 
     }
-// this method allows for a player to make their turn, including drawing and discarding
+    // this method allows for a player to make their turn, including drawing and discarding
     public void playerTurn(Player player) {
         System.out.println("\n" + player.getName() + "'s turn!");
         displayHand(player);
@@ -166,7 +173,7 @@ public class Game {
             System.out.println("Invalid choice!");
         }
     }
-// when the first player is done, change the user to the second player
+    // when the first player is done, change the user to the second player
     public void switchPlayer() {
         if (currentPlayer == player1) {
             currentPlayer = player2;
@@ -181,7 +188,7 @@ public class Game {
         System.out.println(player1.getName() + ": " + player1.getPoints());
         System.out.println(player2.getName() + ": " + player2.getPoints());
     }
-// plays a round of the game, resets most of the variables
+    // plays a round of the game, resets most of the variables
     public void playRound() {
         System.out.println("\nNEW ROUND");
 
@@ -222,8 +229,12 @@ public class Game {
         } else if (deck.isEmpty()) {
             System.out.println("Deck ran out of cards. Round is a draw");
         }
+
+        if (view != null) {
+            view.repaint();
+        }
     }
-// shows rules and calls methods for playing rounds and displaying scores
+    // shows rules and calls methods for playing rounds and displaying scores
     public void playGame() {
         System.out.println("Welcome to Rummy!");
         System.out.println(player1.getName() + " vs " + player2.getName());
@@ -249,9 +260,20 @@ public class Game {
             System.out.println("\n" + player2.getName() + " WINS THE GAME:)");
         }
     }
-// creates the game and runs it
+
+    public void setView(GameView view) {
+        this.view = view;
+    }
+
+    public int getState(){
+        return state;
+    }
+
+    // creates the game and runs it
     public static void main(String[] args) {
         Game g = new Game("Player 1", "Player 2", 50);
+        GameView view = new GameView(g);
+        g.setView(view);
         g.playGame();
     }
 }
