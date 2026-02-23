@@ -13,9 +13,9 @@ public class Game {
     public static final int STATE_END = 2;
 
     public Deck deck;
-    private ArrayList<Card> discardPile;
-    private Player player1;
-    private Player player2;
+    public Player player1;
+    public Player player2;
+    public ArrayList<Card> discardPile;
     private Scanner scanner;
     private int maxScore;
     private Player currentPlayer;
@@ -172,6 +172,10 @@ public class Game {
         } else {
             System.out.println("Invalid choice!");
         }
+
+        if (view != null) {
+            view.repaint();
+        }
     }
     // when the first player is done, change the user to the second player
     public void switchPlayer() {
@@ -273,6 +277,8 @@ public class Game {
     public static void main(String[] args) {
         Game g = new Game("Player 1", "Player 2", 50);
         GameView view = new GameView(g);
+        Card test = new Card("Ace", "Spades", 1);
+        System.out.println(test.getImage());
         g.setView(view);
         g.playGame();
     }
