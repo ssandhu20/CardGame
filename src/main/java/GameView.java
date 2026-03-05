@@ -16,6 +16,7 @@ public class GameView extends JFrame {
         this.setTitle("Rummy Game");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setVisible(true);
+
     }
 
     public void paint(Graphics g) {
@@ -28,6 +29,8 @@ public class GameView extends JFrame {
         drawHands(g);
         drawDiscardPile(g);
         drawDeck(g);
+        Card testTwo = new Card("Back", "Card", 0);
+        g.drawImage(testTwo.getImage(), 525, 300, 70, 100, null);
     }
 
     private void drawHands(Graphics g) {
@@ -55,9 +58,6 @@ public class GameView extends JFrame {
             Card c = hand1.get(i);
             if (c.getImage() != null && c.getImage().getWidth(null) > 0) {
                 g.drawImage(c.getImage(), xStart + i * spacing, yBottom, cardWidth, cardHeight, null);
-            } else {
-                // Draw placeholder card
-                drawPlaceholderCard(g, xStart + i * spacing, yBottom, cardWidth, cardHeight, c);
             }
         }
 
@@ -68,9 +68,6 @@ public class GameView extends JFrame {
             Card c = hand2.get(i);
             if (c.getImage() != null && c.getImage().getWidth(null) > 0) {
                 g.drawImage(c.getImage(), xStart + i * spacing, yTop, cardWidth, cardHeight, null);
-            } else {
-                // Draw placeholder card
-                drawPlaceholderCard(g, xStart + i * spacing, yTop, cardWidth, cardHeight, c);
             }
         }
     }
@@ -92,16 +89,13 @@ public class GameView extends JFrame {
         Card top = backend.discardPile.get(backend.discardPile.size() - 1);
         if (top.getImage() != null && top.getImage().getWidth(null) > 0) {
             g.drawImage(top.getImage(), xDiscard, yDiscard, cardWidth, cardHeight, null);
-        } else {
-            drawPlaceholderCard(g, xDiscard, yDiscard, cardWidth, cardHeight, top);
         }
+
     }
 
     private void drawDeck(Graphics g) {
         if (backend.deck == null) return;
 
-        int cardWidth = 70;
-        int cardHeight = 100;
         int xDeck = 500;
         int yDeck = 300;
 
@@ -110,43 +104,9 @@ public class GameView extends JFrame {
         g.setFont(new Font("Arial", Font.BOLD, 14));
         g.drawString("Deck (" + backend.deck.getCardsLeft() + " cards)", xDeck, yDeck - 10);
 
-        // Draw card back (multiple overlapping to show deck)
-        for (int i = 0; i < 5; i++) {
-            drawCardBack(g, xDeck + i * 2, yDeck + i * 2, cardWidth, cardHeight);
-        }
     }
 
-    private void drawPlaceholderCard(Graphics g, int x, int y, int width, int height, Card card) {
-        // Draw white rectangle for card
-        g.setColor(Color.WHITE);
-        g.fillRect(x, y, width, height);
 
-        // Draw border
-        g.setColor(Color.BLACK);
-        g.drawRect(x, y, width, height);
 
-        // Draw rank and suit text
-        g.setFont(new Font("Arial", Font.BOLD, 12));
-        String text = card.getRank();
-        g.drawString(text, x + 5, y + 20);
 
-        String suit = card.getSuit();
-        // Color based on suit
-        if (suit.equals("Hearts") || suit.equals("Diamonds")) {
-            g.setColor(Color.RED);
-        }
-        g.setFont(new Font("Arial", Font.PLAIN, 10));
-        g.drawString(suit, x + 5, y + 35);
-    }
-
-    private void drawCardBack(Graphics g, int x, int y, int width, int height) {
-        // Load and draw the card back image
-        ImageIcon cardBackIcon = new ImageIcon("back_of_card.png");
-        Image cardBackImage = cardBackIcon.getImage();
-
-        if (cardBackImage != null && cardBackImage.getWidth(null) > 0) {
-            g.drawImage(cardBackImage, x, y, width, height, null);
-
-        }
-    }
 }
