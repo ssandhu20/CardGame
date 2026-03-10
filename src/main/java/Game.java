@@ -273,6 +273,10 @@ public class Game {
         return state;
     }
 
+    public Player getCurrentPlayer() {
+        return currentPlayer;
+    }
+
     // creates the game and runs it
     public static void main(String[] args) {
         Game g = new Game("Player 1", "Player 2", 50);

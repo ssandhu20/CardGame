@@ -34,6 +34,8 @@ public class GameView extends JFrame {
     private void drawHands(Graphics g) {
         Player p1 = backend.player1;
         Player p2 = backend.player2;
+        boolean p1IsPlaying = p1 == backend.getCurrentPlayer();
+        boolean p2IsPlaying = p2 == backend.getCurrentPlayer();
 
         if (p1 == null || p2 == null) return;
 
@@ -52,7 +54,7 @@ public class GameView extends JFrame {
 
         for (int i = 0; i < hand1.size(); i++) {
             Card c = hand1.get(i);
-            c.draw(g, xStart + i * spacing, yBottom, true);
+            c.draw(g, xStart + i * spacing, yBottom, p1IsPlaying);
         }
 
         // Draw Player 2 (top) with label
@@ -60,7 +62,7 @@ public class GameView extends JFrame {
 
         for (int i = 0; i < hand2.size(); i++) {
             Card c = hand2.get(i);
-            c.draw(g, xStart + i * spacing, yTop, true);
+            c.draw(g, xStart + i * spacing, yTop, p2IsPlaying);
         }
     }
 
