@@ -29,8 +29,6 @@ public class GameView extends JFrame {
         drawHands(g);
         drawDiscardPile(g);
         drawDeck(g);
-        Card testTwo = new Card("Back", "Card", 0);
-        g.drawImage(testTwo.getImage(), 525, 300, 70, 100, null);
     }
 
     private void drawHands(Graphics g) {
@@ -46,8 +44,6 @@ public class GameView extends JFrame {
         int yBottom = 550;
         int yTop = 50;
         int spacing = 80;
-        int cardWidth = 70;
-        int cardHeight = 100;
 
         // Draw Player 1 (bottom) with label
         g.setColor(Color.WHITE);
@@ -56,9 +52,7 @@ public class GameView extends JFrame {
 
         for (int i = 0; i < hand1.size(); i++) {
             Card c = hand1.get(i);
-            if (c.getImage() != null && c.getImage().getWidth(null) > 0) {
-                g.drawImage(c.getImage(), xStart + i * spacing, yBottom, cardWidth, cardHeight, null);
-            }
+            c.draw(g, xStart + i * spacing, yBottom, true);
         }
 
         // Draw Player 2 (top) with label
@@ -66,17 +60,13 @@ public class GameView extends JFrame {
 
         for (int i = 0; i < hand2.size(); i++) {
             Card c = hand2.get(i);
-            if (c.getImage() != null && c.getImage().getWidth(null) > 0) {
-                g.drawImage(c.getImage(), xStart + i * spacing, yTop, cardWidth, cardHeight, null);
-            }
+            c.draw(g, xStart + i * spacing, yTop, true);
         }
     }
 
     private void drawDiscardPile(Graphics g) {
         if (backend.discardPile == null || backend.discardPile.size() == 0) return;
 
-        int cardWidth = 70;
-        int cardHeight = 100;
         int xDiscard = 350;
         int yDiscard = 300;
 
@@ -86,10 +76,9 @@ public class GameView extends JFrame {
         g.drawString("Discard Pile", xDiscard, yDiscard - 10);
 
         // Draw top card of discard pile
-        Card top = backend.discardPile.get(backend.discardPile.size() - 1);
-        if (top.getImage() != null && top.getImage().getWidth(null) > 0) {
-            g.drawImage(top.getImage(), xDiscard, yDiscard, cardWidth, cardHeight, null);
-        }
+        Card top = backend.discardPile.getLast();
+        if (top != null)
+            top.draw(g, xDiscard, yDiscard, true);
 
     }
 
@@ -103,7 +92,8 @@ public class GameView extends JFrame {
         g.setColor(Color.WHITE);
         g.setFont(new Font("Arial", Font.BOLD, 14));
         g.drawString("Deck (" + backend.deck.getCardsLeft() + " cards)", xDeck, yDeck - 10);
-
+        // Draw the deck
+        backend.deck.draw(g);
     }
 
 

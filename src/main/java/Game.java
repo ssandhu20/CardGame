@@ -22,12 +22,15 @@ public class Game {
     private int turnCount;
 
     public Game(String player1Name, String player2Name, int maxScore) {
+        // Create the frontend view
+        this.view = new GameView(this);
+
         this.player1 = new Player(player1Name);
         this.player2 = new Player(player2Name);
         this.discardPile = new ArrayList<>();
         this.scanner = new Scanner(System.in);
         this.maxScore = maxScore;
-        this.deck = new Deck(rank, suits, value);
+        this.deck = new Deck(rank, suits, value, view);
         this.currentPlayer = player1;
         this.state = STATE_INSTR;
     }
@@ -140,6 +143,7 @@ public class Game {
 
     // this method allows for a player to make their turn, including drawing and discarding
     public void playerTurn(Player player) {
+        view.repaint();
         System.out.println("\n" + player.getName() + "'s turn!");
         displayHand(player);
 
@@ -203,7 +207,7 @@ public class Game {
         player2.clearHand();
         discardPile.clear();
 
-        deck = new Deck(rank, suits, value);
+        deck = new Deck(rank, suits, value, view);
 
         dealCards();
         currentPlayer = player1;
@@ -265,10 +269,6 @@ public class Game {
         }
     }
 
-    public void setView(GameView view) {
-        this.view = view;
-    }
-
     public int getState(){
         return state;
     }
@@ -276,8 +276,6 @@ public class Game {
     // creates the game and runs it
     public static void main(String[] args) {
         Game g = new Game("Player 1", "Player 2", 50);
-        GameView view = new GameView(g);
-        g.setView(view);
         g.playGame();
     }
 }

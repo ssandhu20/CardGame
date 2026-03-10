@@ -1,15 +1,18 @@
+import java.awt.*;
 import java.util.ArrayList;
 
 public class Deck {
     private ArrayList<Card> cards;
     private int cardsLeft;
+    private GameView view;
 
-    public Deck(String[] ranks, String[] suits, int[] values) {
+    public Deck(String[] ranks, String[] suits, int[] values, GameView view) {
         this.cards = new ArrayList<>();
+        this.view = view;
 
         for (String suit : suits) {
             for (int i = 0; i < ranks.length; i++) {
-                cards.add(new Card(ranks[i], suit, values[i]));
+                cards.add(new Card(ranks[i], suit, values[i], view));
             }
         }
 
@@ -43,6 +46,10 @@ public class Deck {
             cards.set(r, temp);
         }
         cardsLeft = cards.size();
+    }
+
+    public void draw(Graphics g) {
+        g.drawImage(Card.backImage, 525, 300, Card.width, Card.height, view);
     }
 }
 
