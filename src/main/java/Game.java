@@ -9,8 +9,8 @@ public class Game {
     private GameView view;
 
     public static final int STATE_INSTR = 0;
-    public static final int STATE_MAIN = 1;
-    public static final int STATE_END = 2;
+    //public static final int STATE_MAIN = 1;
+    //public static final int STATE_END = 2;
 
     public Deck deck;
     public Player player1;
@@ -271,6 +271,33 @@ public class Game {
 
     public int getState(){
         return state;
+    }
+
+    // Resets the game to its initial starting state
+    public void resetGame() {
+        // 1. Reset player scores
+        player1.resetPoints();
+        player2.resetPoints();
+
+        // 2. Clear hands and discard pile
+        player1.clearHand();
+        player2.clearHand();
+        discardPile.clear();
+
+        // 3. Re-initialize deck and deal
+        deck = new Deck(rank, suits, value);
+        dealCards();
+        currentPlayer = player1;
+        turnCount = 0;
+
+        System.out.println("\n--- GAME RESTARTED ---");
+        System.out.println(currentPlayer.getName() + "'s turn!");
+        displayHand(currentPlayer);
+
+        // 4. Update the UI
+        if (view != null) {
+            view.repaint();
+        }
     }
 
     // creates the game and runs it

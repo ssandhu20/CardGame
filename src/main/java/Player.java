@@ -17,6 +17,10 @@ public class Player {
         this.points = 0;
     }
 
+    public void resetPoints() {
+        this.points = 0;
+    }
+
     public String getName() {
         return name;
     }
