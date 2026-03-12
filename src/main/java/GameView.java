@@ -1,5 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 public class GameView extends JFrame {
@@ -8,6 +10,7 @@ public class GameView extends JFrame {
     public static final int WINDOW_HEIGHT = 700;
 
     private Game backend;
+    private JPanel gamePanel;
 
     public GameView(Game backend) {
         this.backend = backend;
@@ -15,22 +18,45 @@ public class GameView extends JFrame {
         this.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
         this.setTitle("Rummy Game");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        // --- NEW: Custom Panel for Drawing ---
+        gamePanel = new JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g); // Always call this first
+
+                // Draw green felt background
+                g.setColor(new Color(0, 100, 0));
+                g.fillRect(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
+
+                drawHands(g);
+                drawDiscardPile(g);
+                drawDeck(g);
+
+                Card testTwo = new Card("Back", "Card", 0);
+                if (testTwo.getImage() != null) {
+                    g.drawImage(testTwo.getImage(), 525, 300, 70, 100, null);
+                }
+            }
+        };
+
+        gamePanel.setLayout(null); // Allows absolute positioning of the button
+
+        JButton restartButton = new JButton("Restart Game");
+        restartButton.setBounds(375, 10, 150, 40);
+        restartButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Ensure you have added the resetGame() method to Game.java as discussed!
+                backend.resetGame();
+                gamePanel.repaint();
+            }
+        });
+
+        gamePanel.add(restartButton);
+        this.add(gamePanel);
+
         this.setVisible(true);
-
-    }
-
-    public void paint(Graphics g) {
-        super.paint(g);
-
-        // Draw green felt background
-        g.setColor(new Color(0, 100, 0));
-        g.fillRect(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
-
-        drawHands(g);
-        drawDiscardPile(g);
-        drawDeck(g);
-        Card testTwo = new Card("Back", "Card", 0);
-        g.drawImage(testTwo.getImage(), 525, 300, 70, 100, null);
     }
 
     private void drawHands(Graphics g) {
@@ -90,7 +116,6 @@ public class GameView extends JFrame {
         if (top.getImage() != null && top.getImage().getWidth(null) > 0) {
             g.drawImage(top.getImage(), xDiscard, yDiscard, cardWidth, cardHeight, null);
         }
-
     }
 
     private void drawDeck(Graphics g) {
@@ -103,10 +128,5 @@ public class GameView extends JFrame {
         g.setColor(Color.WHITE);
         g.setFont(new Font("Arial", Font.BOLD, 14));
         g.drawString("Deck (" + backend.deck.getCardsLeft() + " cards)", xDeck, yDeck - 10);
-
     }
-
-
-
-
 }
